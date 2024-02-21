@@ -1,32 +1,23 @@
-import {
-	Controller,
-	Get,
-	Post,
-	Body,
-	Patch,
-	Param,
-	Delete
-} from '@nestjs/common'
+import { Controller, Get, Post, Body, Res, HttpStatus } from '@nestjs/common'
 import { CategoriasService } from './categorias.service'
-import { CreateCategoriaDto } from './dto/create-categoria.dto'
-import { UpdateCategoriaDto } from './dto/update-categoria.dto'
+import CreateCategoriaDto from './dto/create-categoria.dto'
+import { Response } from 'express'
 
 @Controller('categorias')
 export class CategoriasController {
 	constructor(private readonly categoriasService: CategoriasService) {}
 
 	@Post()
-	create(@Body() createCategoriaDto: CreateCategoriaDto) {
-		return this.categoriasService.create(createCategoriaDto)
+	async create(@Body() data: CreateCategoriaDto, @Res() res: Response) {
+		await this.categoriasService.criarCategoria(data)
+		return res
+			.status(HttpStatus.CREATED)
+			.json({ message: 'Categoria criada com sucesso!' })
 	}
 
 	@Get()
-	findAll() {
-		return this.categoriasService.findAll()
-	}
-
-	@Get(':id')
-	findOne(@Param('id') id: string) {
-		return this.categoriasService.findOne(+id)
+	async findAll(@Res() res: Response) {
+		const categorias = await this.categoriasService.listarCategorias()
+		return res.status(HttpStatus.OK).json({ categorias })
 	}
 }
