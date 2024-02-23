@@ -3,13 +3,15 @@ import {
 	Get,
 	Post,
 	Body,
-	Param,
 	HttpStatus,
-	Res
+	Res,
+	Req,
+	UseGuards
 } from '@nestjs/common'
 import { UsuariosService } from './usuarios.service'
 import { CreateUsuarioDto } from './dto/create-usuario.dto'
-import { Response } from 'express'
+import { Response, Request } from 'express'
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
 
 @Controller('usuario')
 export class UsuariosController {
@@ -23,9 +25,12 @@ export class UsuariosController {
 			.json({ message: 'usuário criado com sucesso!' })
 	}
 
-	@Get(':id')
-	async findOne(@Param('id') id: string, @Res() res: Response) {
-		const user = await this.usuariosService.buscarUsuario(id)
-		return res.status(HttpStatus.OK).json({ user })
+	@UseGuards(JwtAuthGuard)
+	@Get()
+	async findOne(@Req() req: Request, @Res() res: Response) {
+		const usuarioId = (req.user as { id: string }).id
+		const usuario = await this.usuariosService.buscarUsuario(usuarioId)
+
+		return res.status(HttpStatus.OK).json(usuario)
 	}
 }
