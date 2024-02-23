@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+	BadRequestException,
+	Injectable,
+	NotFoundException
+} from '@nestjs/common'
 import { CreateUsuarioDto } from './dto/create-usuario.dto'
 import { PrismaService } from 'src/database/prisma.service'
 import * as bcrypt from 'bcrypt'
@@ -16,7 +20,7 @@ export class UsuariosService {
 		})
 
 		if (!user) {
-			throw new BadRequestException('usuário não encontrado.')
+			throw new NotFoundException('usuário não encontrado.')
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
