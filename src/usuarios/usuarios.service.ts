@@ -8,6 +8,7 @@ import { PrismaService } from 'src/database/prisma.service'
 import * as bcrypt from 'bcrypt'
 import { formateData } from 'src/utils/users.functions'
 import { Usuario, UsuarioLogado } from './entities/usuario.entity'
+import { UpdateUsuarioDto } from './dto/update-usuario.dto'
 
 @Injectable()
 export class UsuariosService {
@@ -47,6 +48,32 @@ export class UsuariosService {
 		}
 
 		return await this.prisma.user.create({
+			data: {
+				email: data.email,
+				nome: formateData(data.nome),
+				senha: senhaSegura
+			}
+		})
+	}
+
+	async atualizarUsuario(id: string, data: UpdateUsuarioDto) {
+		const email = await this.buscarEmail(data.email)
+		const usuario = await this.buscarUsuario(id)
+
+		if (!usuario) {
+			throw new NotFoundException('Usuário não encontrado.')
+		}
+
+		if (email && email.id !== id) {
+			throw new BadRequestException('E-mail já em uso')
+		}
+
+		const senhaSegura = await bcrypt.hash(data.senha, 10)
+
+		return await this.prisma.user.update({
+			where: {
+				id
+			},
 			data: {
 				email: data.email,
 				nome: formateData(data.nome),
