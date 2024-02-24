@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Res, HttpStatus } from '@nestjs/common'
+import {
+	Controller,
+	Get,
+	Post,
+	Body,
+	Res,
+	HttpStatus,
+	Delete,
+	Param
+} from '@nestjs/common'
 import { CategoriasService } from './categorias.service'
 import CreateCategoriaDto from './dto/create-categoria.dto'
 import { Response } from 'express'
@@ -19,5 +28,12 @@ export class CategoriasController {
 	async findAll(@Res() res: Response) {
 		const categorias = await this.categoriasService.listarCategorias()
 		return res.status(HttpStatus.OK).json({ categorias })
+	}
+
+	@Delete(':id')
+	async delete(@Param('id') id: string, @Res() res: Response) {
+		await this.categoriasService.deletarCategoria(id)
+
+		return res.status(HttpStatus.NO_CONTENT).send()
 	}
 }

@@ -7,10 +7,18 @@ export class CategoriasService {
 	constructor(private readonly prisma: PrismaService) {}
 
 	async listarCategorias() {
-		return await this.prisma.category.findMany()
+		return this.prisma.category.findMany()
 	}
 
 	async criarCategoria(data: CreateCategoriaDto) {
-		return await this.prisma.category.create({ data })
+		return this.prisma.category.create({ data })
+	}
+
+	async deletarCategoria(id: string) {
+		return this.prisma.category.delete({
+			where: {
+				id: Number(id)
+			}
+		})
 	}
 }
