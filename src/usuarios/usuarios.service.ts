@@ -15,24 +15,15 @@ export class UsuariosService {
 	constructor(private readonly prisma: PrismaService) {}
 
 	async buscarUsuario(id: string): Promise<UsuarioLogado> {
-		const user = await this.prisma.user.findFirst({
+		return this.prisma.user.findFirst({
 			where: {
 				id
 			}
 		})
-
-		if (!user) {
-			throw new NotFoundException('usuário não encontrado.')
-		}
-
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { senha: _, ...userInfo } = user
-
-		return userInfo
 	}
 
 	async buscarEmail(email: string): Promise<Usuario> {
-		return await this.prisma.user.findFirst({
+		return this.prisma.user.findFirst({
 			where: {
 				email
 			}
@@ -47,7 +38,7 @@ export class UsuariosService {
 			throw new BadRequestException('e-mail já em uso')
 		}
 
-		return await this.prisma.user.create({
+		return this.prisma.user.create({
 			data: {
 				email: data.email,
 				nome: formateData(data.nome),
@@ -70,7 +61,7 @@ export class UsuariosService {
 
 		const senhaSegura = await bcrypt.hash(data.senha, 10)
 
-		return await this.prisma.user.update({
+		return this.prisma.user.update({
 			where: {
 				id
 			},
