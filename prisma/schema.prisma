@@ -26,27 +26,53 @@ model Category {
 }
 
 model Product {
-  id                 String   @id @default(uuid())
+  id                 String            @id @default(uuid())
   descricao          String
   quantidade_estoque Int
   valor              Int
-  category           Category @relation(fields: [categoria_id], references: [id])
+  category           Category          @relation(fields: [categoria_id], references: [id])
   categoria_id       Int
+  produto_imagem     String
+  Product_request    Product_request[]
 
   @@map("produtos")
 }
 
 model Client {
-  id     String @id @default(uuid())
-  nome   String
-  email  String @unique
-  cpf    String @unique
-  cep    String
-  rua    String
-  numero Int
-  bairro String
-  cidade String
-  estado String
+  id      String    @id @default(uuid())
+  nome    String
+  email   String    @unique
+  cpf     String    @unique
+  cep     String?
+  rua     String?
+  numero  Int?
+  bairro  String?
+  cidade  String?
+  estado  String?
+  Request Request[]
 
   @@map("clientes")
+}
+
+model Request {
+  id              String            @id @default(uuid())
+  client          Client            @relation(fields: [cliente_id], references: [id])
+  cliente_id      String
+  observacao      String?
+  valor_total     Int
+  Product_request Product_request[]
+
+  @@map("pedidos")
+}
+
+model Product_request {
+  id                 String  @id @default(uuid())
+  request            Request @relation(fields: [pedido_id], references: [id])
+  pedido_id          String
+  product            Product @relation(fields: [produto_id], references: [id])
+  produto_id         String
+  quantidade_produto Int
+  valor_produto      Int
+
+  @@map("pedido_produtos")
 }
