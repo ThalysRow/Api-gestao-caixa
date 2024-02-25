@@ -26,4 +26,7 @@ export class CreateProdutoDto {
 	@IsNumber()
 	@IsPositive({ message: 'O campo categoria deve receber um número positivo' })
 	categoria_id: number
+
+	@IsString({ message: 'Deve ser enviado o link da imagem' })
+	produto_imagem: string
 }
