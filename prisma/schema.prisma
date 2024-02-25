@@ -18,8 +18,35 @@ model User {
 }
 
 model Category {
-  id        Int    @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   descricao String
+  Product   Product[]
 
   @@map("categorias")
+}
+
+model Product {
+  id                 String   @id @default(uuid())
+  descricao          String
+  quantidade_estoque Int
+  valor              Int
+  category           Category @relation(fields: [categoria_id], references: [id])
+  categoria_id       Int
+
+  @@map("produtos")
+}
+
+model Client {
+  id     String @id @default(uuid())
+  nome   String
+  email  String @unique
+  cpf    String @unique
+  cep    String
+  rua    String
+  numero Int
+  bairro String
+  cidade String
+  estado String
+
+  @@map("clientes")
 }
