@@ -54,4 +54,26 @@ export class ProdutosService {
 			data
 		})
 	}
+
+	async listarProdutos() {
+		return this.prisma.product.findMany()
+	}
+
+	async listarProdutosId(id: string) {
+		const categoria = await this.prisma.category.findFirst({
+			where: {
+				id: Number(id)
+			}
+		})
+
+		if (!categoria) {
+			throw new NotFoundException('Categoria não encontrada')
+		}
+
+		return this.prisma.product.findMany({
+			where: {
+				categoria_id: Number(id)
+			}
+		})
+	}
 }
