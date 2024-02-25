@@ -8,7 +8,8 @@ import {
 	Put,
 	Param,
 	Get,
-	Query
+	Query,
+	Delete
 } from '@nestjs/common'
 import { ProdutosService } from './produtos.service'
 import { CreateProdutoDto } from './dto/create-produto.dto'
@@ -59,5 +60,11 @@ export class ProdutosController {
 	async findeOne(@Param('id') id: string, @Res() res: Response) {
 		const produto = await this.produtosService.detalharProduto(id)
 		return res.status(HttpStatus.OK).json(produto)
+	}
+
+	@Delete(':id')
+	async del(@Param('id') id: string, @Res() res: Response) {
+		await this.produtosService.(id)
+		return res.status(HttpStatus.NO_CONTENT).send()
 	}
 }

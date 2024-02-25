@@ -1,8 +1,15 @@
-import { IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator'
+import {
+	IsNotEmpty,
+	IsNumber,
+	IsPositive,
+	IsString,
+	Matches
+} from 'class-validator'
 
 export class CreateProdutoDto {
 	@IsString({ message: 'O campo deve receber uma string' })
 	@IsNotEmpty({ message: 'O campo descrição é obrigatório' })
+	@Matches(/[^ ]/, { message: 'O campo descrição não pode estar vazio' })
 	descricao: string
 
 	@IsNotEmpty({ message: 'O campo quantidade é obrigatório' })

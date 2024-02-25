@@ -86,4 +86,18 @@ export class ProdutosService {
 
 		return produto
 	}
+
+	async excluirProduto(id: string) {
+		const produto = await this.buscarProduto(id)
+
+		if (!produto) {
+			throw new NotFoundException('Produto não encontrado')
+		}
+
+		return await this.prisma.product.delete({
+			where: {
+				id
+			}
+		})
+	}
 }
