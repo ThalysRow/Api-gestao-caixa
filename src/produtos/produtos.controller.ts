@@ -6,7 +6,9 @@ import {
 	Res,
 	HttpStatus,
 	Put,
-	Param
+	Param,
+	Get,
+	Query
 } from '@nestjs/common'
 import { ProdutosService } from './produtos.service'
 import { CreateProdutoDto } from './dto/create-produto.dto'
@@ -36,5 +38,20 @@ export class ProdutosController {
 	) {
 		await this.produtosService.editarProduto(id, data)
 		return res.status(HttpStatus.NO_CONTENT).send()
+	}
+
+	@Get()
+	async findAll(
+		@Query('categoria_id') categoria_id: string,
+		@Res() res: Response
+	) {
+		if (categoria_id) {
+			const lista = await this.produtosService.listarProdutosId(categoria_id)
+			return res.status(HttpStatus.OK).json(lista)
+		}
+
+		const lista = await this.produtosService.listarProdutos()
+
+		return res.status(HttpStatus.OK).json(lista)
 	}
 }
