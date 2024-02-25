@@ -54,4 +54,10 @@ export class ProdutosController {
 
 		return res.status(HttpStatus.OK).json(lista)
 	}
+
+	@Get(':id')
+	async findeOne(@Param('id') id: string, @Res() res: Response) {
+		const produto = await this.produtosService.detalharProduto(id)
+		return res.status(HttpStatus.OK).json(produto)
+	}
 }
