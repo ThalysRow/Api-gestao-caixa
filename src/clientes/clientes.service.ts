@@ -40,15 +40,12 @@ export class ClientesService {
 			nome: formateData(data.nome),
 			email: data.email,
 			cpf: data.cpf,
-			cep: data.cep !== undefined ? data.cep : 'undefined',
-			rua: data.rua !== undefined ? formateData(data.rua) : 'undefined',
-			numero: data.numero !== undefined ? data.numero : 0,
-			bairro:
-				data.bairro !== undefined ? formateData(data.bairro) : 'undefined',
-			cidade:
-				data.cidade !== undefined ? formateData(data.cidade) : 'undefined',
-			estado:
-				data.estado !== undefined ? data.estado.toUpperCase() : 'undefined'
+			cep: data.cep !== undefined ? data.cep : null,
+			rua: data.rua !== undefined ? formateData(data.rua) : null,
+			numero: data.numero !== undefined ? data.numero : null,
+			bairro: data.bairro !== undefined ? formateData(data.bairro) : null,
+			cidade: data.cidade !== undefined ? formateData(data.cidade) : null,
+			estado: data.estado !== undefined ? data.estado.toUpperCase() : null
 		}
 
 		return this.prisma.client.create({ data: dados })
@@ -92,5 +89,19 @@ export class ClientesService {
 			},
 			data: dados
 		})
+	}
+
+	async listarClientes() {
+		return this.prisma.client.findMany()
+	}
+
+	async detalharCliente(id: string) {
+		const cliente = await this.buscarClienteId(id)
+
+		if (!cliente) {
+			throw new NotFoundException('Cliente não encontrado')
+		}
+
+		return cliente
 	}
 }

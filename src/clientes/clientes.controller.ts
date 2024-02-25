@@ -6,7 +6,8 @@ import {
 	HttpStatus,
 	UseGuards,
 	Put,
-	Param
+	Param,
+	Get
 } from '@nestjs/common'
 import { ClientesService } from './clientes.service'
 import { CreateClienteDto } from './dto/create-cliente.dto'
@@ -37,5 +38,17 @@ export class ClientesController {
 		return res
 			.status(HttpStatus.OK)
 			.json({ message: 'Cliente atualizado com sucesso!' })
+	}
+
+	@Get()
+	async findAll(@Res() res: Response) {
+		const clientes = await this.clientesService.listarClientes()
+		return res.status(HttpStatus.OK).json(clientes)
+	}
+
+	@Get(':id')
+	async findOne(@Param('id') id: string, @Res() res: Response) {
+		const cliente = await this.clientesService.detalharCliente(id)
+		return res.status(HttpStatus.OK).json(cliente)
 	}
 }
