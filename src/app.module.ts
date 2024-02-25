@@ -4,6 +4,7 @@ import { PrismaModule } from './database/prisma.module'
 import { UsuariosModule } from './usuarios/usuarios.module'
 import { AuthModule } from './auth/auth.module'
 import { ProdutosModule } from './produtos/produtos.module'
+import { ClientesModule } from './clientes/clientes.module'
 
 @Module({
 	imports: [
@@ -11,7 +12,8 @@ import { ProdutosModule } from './produtos/produtos.module'
 		PrismaModule,
 		UsuariosModule,
 		AuthModule,
-		ProdutosModule
+		ProdutosModule,
+		ClientesModule
 	],
 	controllers: [],
 	providers: []
