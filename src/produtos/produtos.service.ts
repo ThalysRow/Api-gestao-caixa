@@ -9,7 +9,7 @@ export class ProdutosService {
 	constructor(private readonly prisma: PrismaService) {}
 
 	async buscarProduto(id: string) {
-		return this.prisma.product.findFirst({ where: { id } })
+		return await this.prisma.product.findFirst({ where: { id } })
 	}
 
 	async cadastrarProduto(data: CreateProdutoDto) {
@@ -23,7 +23,7 @@ export class ProdutosService {
 			throw new NotFoundException('Categoria não encontrada')
 		}
 
-		return this.prisma.product.create({
+		return await this.prisma.product.create({
 			data: {
 				descricao: formateData(data.descricao),
 				quantidade_estoque: data.quantidade_estoque,
@@ -47,7 +47,7 @@ export class ProdutosService {
 			throw new NotFoundException('Categoria não encontrada')
 		}
 
-		return this.prisma.product.update({
+		return await this.prisma.product.update({
 			where: {
 				id
 			},
