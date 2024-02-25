@@ -64,7 +64,7 @@ export class ProdutosController {
 
 	@Delete(':id')
 	async del(@Param('id') id: string, @Res() res: Response) {
-		await this.produtosService.(id)
+		await this.produtosService.detalharProduto(id)
 		return res.status(HttpStatus.NO_CONTENT).send()
 	}
 }
