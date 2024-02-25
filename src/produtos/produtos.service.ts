@@ -76,4 +76,14 @@ export class ProdutosService {
 			}
 		})
 	}
+
+	async detalharProduto(id: string) {
+		const produto = await this.buscarProduto(id)
+
+		if (!produto) {
+			throw new NotFoundException('Produto não encontado')
+		}
+
+		return produto
+	}
 }
