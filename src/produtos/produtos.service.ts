@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { CreateProdutoDto } from './dto/create-produto.dto'
 import { PrismaService } from 'src/database/prisma.service'
 import { formateData } from 'src/utils/users.functions'
 import { UpdateProdutoDto } from './dto/update-produto.dto'
+import { CreateProdutoDto } from './dto/create-produto.dto'
 
 @Injectable()
 export class ProdutosService {
@@ -23,12 +23,13 @@ export class ProdutosService {
 			throw new NotFoundException('Categoria não encontrada')
 		}
 
-		return await this.prisma.product.create({
+		return this.prisma.product.create({
 			data: {
 				descricao: formateData(data.descricao),
 				quantidade_estoque: data.quantidade_estoque,
 				valor: data.valor,
-				categoria_id: data.categoria_id
+				categoria_id: data.categoria_id,
+				produto_imagem: data.produto_imagem
 			}
 		})
 	}
