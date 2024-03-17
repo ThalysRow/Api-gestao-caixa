@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+	BadRequestException,
+	Injectable,
+	NotFoundException
+} from '@nestjs/common'
 import { PrismaService } from 'src/database/prisma.service'
 import { formateData } from 'src/utils/users.functions'
 import { UpdateProdutoDto } from './dto/update-produto.dto'
-import { CreateProdutoDto } from './dto/create-produto.dto'
+import { CreateProdutoDto, ImagemDto } from './dto/create-produto.dto'
+import { UploadedFile, deleteFile } from 'src/upload/upload-file'
 
 @Injectable()
 export class ProdutosService {
@@ -12,10 +17,34 @@ export class ProdutosService {
 		return await this.prisma.product.findFirst({ where: { id } })
 	}
 
+	async cadastrarProdutoImagem(data1: CreateProdutoDto, data2: ImagemDto) {
+		const categoria = await this.prisma.category.findFirst({
+			where: {
+				id: Number(data1.categoria_id)
+			}
+		})
+
+		if (!categoria) {
+			throw new NotFoundException('Categoria não encontrada')
+		}
+
+		const imagem = await UploadedFile(data2)
+
+		return this.prisma.product.create({
+			data: {
+				descricao: formateData(data1.descricao),
+				quantidade_estoque: Number(data1.quantidade_estoque),
+				valor: Number(data1.valor),
+				categoria_id: Number(data1.categoria_id),
+				produto_imagem: imagem.url
+			}
+		})
+	}
+
 	async cadastrarProduto(data: CreateProdutoDto) {
 		const categoria = await this.prisma.category.findFirst({
 			where: {
-				id: data.categoria_id
+				id: Number(data.categoria_id)
 			}
 		})
 
@@ -26,10 +55,10 @@ export class ProdutosService {
 		return this.prisma.product.create({
 			data: {
 				descricao: formateData(data.descricao),
-				quantidade_estoque: data.quantidade_estoque,
-				valor: data.valor,
-				categoria_id: data.categoria_id,
-				produto_imagem: data.produto_imagem
+				quantidade_estoque: Number(data.quantidade_estoque),
+				valor: Number(data.valor),
+				categoria_id: Number(data.categoria_id),
+				produto_imagem: null
 			}
 		})
 	}
@@ -93,6 +122,21 @@ export class ProdutosService {
 
 		if (!produto) {
 			throw new NotFoundException('Produto não encontrado')
+		}
+
+		const produtoEmPedido = await this.prisma.product_request.findFirst({
+			where: {
+				produto_id: id
+			}
+		})
+
+		if (produtoEmPedido) {
+			throw new BadRequestException('Este produto está vinculado em um pedido')
+		}
+
+		if (produto.produto_imagem !== null) {
+			const imagem = produto.produto_imagem.split('/')[3]
+			await deleteFile(imagem)
 		}
 
 		return await this.prisma.product.delete({

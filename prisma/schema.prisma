@@ -3,9 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("LOCAL_DB")
-  // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
@@ -32,7 +32,7 @@ model Product {
   valor              Int
   category           Category          @relation(fields: [categoria_id], references: [id])
   categoria_id       Int
-  produto_imagem     String
+  produto_imagem     String?
   Product_request    Product_request[]
 
   @@map("produtos")
