@@ -63,10 +63,49 @@ export class ProdutosService {
 		})
 	}
 
+	async editarProdutoImagem(
+		id: string,
+		data: UpdateProdutoDto,
+		imagem: ImagemDto
+	) {
+		const produto = await this.buscarProduto(id)
+		const categoria = await this.prisma.category.findFirst({
+			where: { id: Number(data.categoria_id) }
+		})
+
+		if (!produto) {
+			throw new NotFoundException('Produto não encontrado')
+		}
+
+		if (!categoria) {
+			throw new NotFoundException('Categoria não encontrada')
+		}
+
+		if (produto.produto_imagem !== null) {
+			const imagem = produto.produto_imagem.split('/')[3]
+			await deleteFile(imagem)
+		}
+
+		const url = await UploadedFile(imagem)
+
+		return await this.prisma.product.update({
+			where: {
+				id
+			},
+			data: {
+				descricao: data.descricao,
+				quantidade_estoque: Number(data.quantidade_estoque),
+				valor: Number(data.quantidade_estoque),
+				categoria_id: Number(data.categoria_id),
+				produto_imagem: url.url
+			}
+		})
+	}
+
 	async editarProduto(id: string, data: UpdateProdutoDto) {
 		const produto = await this.buscarProduto(id)
 		const categoria = await this.prisma.category.findFirst({
-			where: { id: data.categoria_id }
+			where: { id: Number(data.categoria_id) }
 		})
 
 		if (!produto) {
@@ -81,7 +120,12 @@ export class ProdutosService {
 			where: {
 				id
 			},
-			data
+			data: {
+				descricao: data.descricao,
+				quantidade_estoque: Number(data.quantidade_estoque),
+				valor: Number(data.quantidade_estoque),
+				categoria_id: Number(data.categoria_id)
+			}
 		})
 	}
 

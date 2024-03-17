@@ -1,10 +1,4 @@
-import {
-	IsNotEmpty,
-	IsNumber,
-	IsPositive,
-	IsString,
-	Matches
-} from 'class-validator'
+import { IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator'
 
 export class UpdateProdutoDto {
 	@IsString({ message: 'O campo deve receber uma string' })
@@ -13,17 +7,15 @@ export class UpdateProdutoDto {
 	descricao: string
 
 	@IsNotEmpty({ message: 'O campo quantidade é obrigatório' })
-	@IsNumber()
-	@IsPositive({ message: 'O campo quantidade deve receber um número positivo' })
-	quantidade_estoque: number
+	quantidade_estoque: number | string
 
 	@IsNotEmpty({ message: 'O campo valor é obrigatório' })
-	@IsNumber()
-	@IsPositive({ message: 'O campo valor deve receber um número positivo' })
-	valor: number
+	valor: number | string
 
 	@IsNotEmpty({ message: 'O campo categoria é obrigatório' })
-	@IsNumber()
-	@IsPositive({ message: 'O campo categoria deve receber um número positivo' })
-	categoria_id: number
+	categoria_id: number | string
+
+	@IsOptional()
+	@IsString({ message: 'O campo produto_imagem deve receber um texto' })
+	produto_imagem: string
 }

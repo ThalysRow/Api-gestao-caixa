@@ -44,12 +44,23 @@ export class ProdutosController {
 	}
 
 	@Put(':id')
+	@UseInterceptors(FileInterceptor('produto_imagem'))
 	async update(
+		@UploadedFile() produto_imagem: ImagemDto,
 		@Param('id') id: string,
 		@Body() data: UpdateProdutoDto,
 		@Res() res: Response
 	) {
+		if (produto_imagem) {
+			return await this.produtosService.editarProdutoImagem(
+				id,
+				data,
+				produto_imagem
+			)
+		}
+
 		await this.produtosService.editarProduto(id, data)
+
 		return res.status(HttpStatus.NO_CONTENT).send()
 	}
 
