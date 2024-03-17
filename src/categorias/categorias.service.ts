@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import CreateCategoriaDto from './dto/create-categoria.dto'
 import { PrismaService } from 'src/database/prisma.service'
+import { formateData } from 'src/utils/users.functions'
 
 @Injectable()
 export class CategoriasService {
@@ -11,7 +12,11 @@ export class CategoriasService {
 	}
 
 	async criarCategoria(data: CreateCategoriaDto) {
-		return this.prisma.category.create({ data })
+		return this.prisma.category.create({
+			data: {
+				descricao: formateData(data.descricao)
+			}
+		})
 	}
 
 	async deletarCategoria(id: string) {

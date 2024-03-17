@@ -8,6 +8,7 @@ import { CreatePedidoDto } from './dto/create-pedido.dto'
 import { ClientesService } from '../clientes/clientes.service'
 import { ProdutosService } from 'src/produtos/produtos.service'
 import * as sendGrid from '@sendgrid/mail'
+import { formateData } from 'src/utils/users.functions'
 
 @Injectable()
 export class PedidosService {
@@ -65,7 +66,7 @@ export class PedidosService {
 		const pedidoId = await this.prisma.request.create({
 			data: {
 				cliente_id: data.cliente_id,
-				observacao: data.observacao,
+				observacao: formateData(data.observacao),
 				valor_total: totalDoPedido
 			}
 		})
@@ -111,7 +112,7 @@ export class PedidosService {
 				pedido: {
 					id: pedido.id,
 					valor_total: pedido.valor_total,
-					observacao: pedido.observacao,
+					observacao: formateData(pedido.observacao),
 					cliente_id: pedido.cliente_id
 				},
 				pedido_produtos: pedido.Product_request.map(produto => {
@@ -154,7 +155,7 @@ export class PedidosService {
 				pedido: {
 					id: pedido.id,
 					valor_total: pedido.valor_total,
-					observacao: pedido.observacao,
+					observacao: formateData(pedido.observacao),
 					cliente_id: pedido.cliente_id
 				},
 				pedido_produtos: pedido.Product_request.map(produto => {
