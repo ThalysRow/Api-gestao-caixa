@@ -93,7 +93,7 @@ export class ProdutosService {
 				id
 			},
 			data: {
-				descricao: data.descricao,
+				descricao: formateData(data.descricao),
 				quantidade_estoque: Number(data.quantidade_estoque),
 				valor: Number(data.quantidade_estoque),
 				categoria_id: Number(data.categoria_id),
@@ -121,7 +121,7 @@ export class ProdutosService {
 				id
 			},
 			data: {
-				descricao: data.descricao,
+				descricao: formateData(data.descricao),
 				quantidade_estoque: Number(data.quantidade_estoque),
 				valor: Number(data.quantidade_estoque),
 				categoria_id: Number(data.categoria_id)
